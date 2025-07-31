@@ -19,12 +19,15 @@ const Statistics = (props) => {
   return(
     <div>
       <h1>statistics</h1>
-      <Statisticline text='good' value={props.good} />
-      <Statisticline text='neutral' value={props.neutral} />
-      <Statisticline text='bad' value={props.bad} />
-      <Statisticline text='all' value={props.total} />
-      <Statisticline text='average' value={props.avg} />
-      <Statisticline text='positive' value={props.positivePercentage} />
+      {props.good || props.neutral || props.bad ? 
+      <>
+        <Statisticline text='good' value={props.good} />
+        <Statisticline text='neutral' value={props.neutral} />
+        <Statisticline text='bad' value={props.bad} />
+        <Statisticline text='all' value={props.total} />
+        <Statisticline text='average' value={props.avg} />
+        <Statisticline text='positive' value={props.positivePercentage + '%'} />
+      </> : 'no feedback given'}
     </div>
   )
 }
@@ -56,7 +59,9 @@ const App = () => {
       <button onClick={handleNeutral}>neutral</button>
       <button onClick={handleBad}>bad</button>
       
-      <Statistics good ={good} neutral={neutral} bad={bad} total={total} avg={avg} positivePercentage={positivePercentage} />
+    
+      <Statistics good ={good} neutral={neutral} bad={bad} total={total} avg={avg} positivePercentage={positivePercentage} />  
+
 
     </div>
   )
