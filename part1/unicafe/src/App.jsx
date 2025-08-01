@@ -2,33 +2,32 @@ import { useState } from 'react'
 
 const Statisticline = (props) => {
   return (
-    <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>{props.text}</td>
-            <td>{props.value}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <tr>
+        <td>{props.text}</td>
+        <td>{props.value}</td>
+      </tr>
   )
 }
 
 const Statistics = (props) => {
   return(
-    <div>
+    <>
       <h1>statistics</h1>
       {props.good || props.neutral || props.bad ? 
       <>
-        <Statisticline text='good' value={props.good} />
-        <Statisticline text='neutral' value={props.neutral} />
-        <Statisticline text='bad' value={props.bad} />
-        <Statisticline text='all' value={props.total} />
-        <Statisticline text='average' value={props.avg} />
-        <Statisticline text='positive' value={props.positivePercentage + '%'} />
+        <table>
+          <tbody>
+            <Statisticline text='good' value={props.good} />
+            <Statisticline text='neutral' value={props.neutral} />
+            <Statisticline text='bad' value={props.bad} />
+            <Statisticline text='all' value={props.total} />
+            <Statisticline text='average' value={props.avg} />
+            <Statisticline text='positive' value={props.positivePercentage + '%'} />
+          </tbody>
+        </table>
+
       </> : 'no feedback given'}
-    </div>
+    </>
   )
 }
 
@@ -53,7 +52,7 @@ const App = () => {
   const positivePercentage = (good / total * 100).toString();
 
   return (
-    <div>
+    <>
       <h1>give feedback</h1>
       <button onClick={handleGood}>good</button>
       <button onClick={handleNeutral}>neutral</button>
@@ -63,7 +62,7 @@ const App = () => {
       <Statistics good ={good} neutral={neutral} bad={bad} total={total} avg={avg} positivePercentage={positivePercentage} />  
 
 
-    </div>
+    </>
   )
 }
 
