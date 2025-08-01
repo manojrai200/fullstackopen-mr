@@ -36,7 +36,7 @@ const App = () => {
       <div>
         <h1>Anecdotes of the day</h1>
           {anecdotes[selected]}  <br /> 
-          has {votes[selected]} votes. <br />  
+          has {votes[selected]} votes <br />  
           <button onClick={handleVote}>vote</button>
           <button onClick={() =>{setSelected(randomNumber)} }>next anecdote</button>
       </div>
@@ -45,7 +45,7 @@ const App = () => {
         {maxVote() ? 
           <div>
             {anecdotes[indexOfMaxVote()]} <br />
-            has {votes[indexOfMaxVote()]} votes.
+            has {votes[indexOfMaxVote()]} votes
           </div>
           :`No one has voted, yet` }
       </div>
