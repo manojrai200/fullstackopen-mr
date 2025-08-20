@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import personService from '../services/persons'
 
-const PersonForm = ({persons, setPersons, setMessage}) => {
+const PersonForm = ({persons, setPersons, setMessage, setErrorMessage}) => {
 
     const [newName, setNewName] = useState('')
     const [newPhoneNumber, setPhoneNumber] = useState('')
+
+    
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -26,22 +28,35 @@ const PersonForm = ({persons, setPersons, setMessage}) => {
                 let updatedPerson = {...person, number: newPhoneNumber}
                 
                 personService.update(id, updatedPerson)
-                    .then(response => {
-                        setPersons(persons.map(person => person.id ===  id ? response.data : person))
+                    .then(returnedPerson => {
+                        setPersons(persons.map(person => person.id ===  id ? returnedPerson : person))
+                        setNewName('')
+                        setPhoneNumber('')
+                    }).catch(error => {
+                        setErrorMessage(`Information of ${newName} has already been removed from server`)
+
+                        setTimeout(() => {
+                            setErrorMessage('')
+                        }, 2000)
                     })
             }
         }else{
                 personService.create(obj)
-                    .then(response => {
-                    setPersons(persons.concat(response.data))
-                    setMessage(`Added ${newName}`)
+                    .then(returnedPerson => {
 
-                    setNewName('')
-                    setPhoneNumber('')
-                    setTimeout(() => {
-                        setMessage(null)
-                    }, 2000)
+                        
+
+                        setPersons(persons.concat(returnedPerson))
+
+                        setMessage(`Added ${newName}`)
+
+                        setNewName('')
+                        setPhoneNumber('')
+                        setTimeout(() => {
+                            setMessage('')
+                        }, 2000)
                 })
+                
 
         }
 
