@@ -8,7 +8,6 @@ import Notification from './component/Notification'
 const App = () => {
   const [persons, setPersons] = useState([])
   const [message, setMessage] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     personService
@@ -16,7 +15,7 @@ const App = () => {
       .then(intialPerson => {
         setPersons(intialPerson)
       })
-  }, [persons])
+  }, [])
 
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -29,16 +28,16 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={message} errorMessage={errorMessage}/>
+      <Notification message={message} />
       <Filter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <h1>add a new</h1>
-      <PersonForm persons={persons} setPersons={setPersons} setMessage={setMessage} setErrorMessage={setErrorMessage}/>
+      <PersonForm persons={persons} setPersons={setPersons} setMessage={setMessage} />
 
 
       <h1>Numbers</h1>
       <div>
         {filteredPersons.map(person =>
-          <Persons key={person.id} person={person} />
+          <Persons key={person.id} person={person} persons={persons} setPersons={setPersons}/>
         )}
       </div>
     </div>

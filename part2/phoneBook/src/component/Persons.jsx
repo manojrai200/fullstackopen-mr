@@ -1,15 +1,18 @@
 import personService from '../services/persons'
 
-const handleDelete = (person) => {
-    if (window.confirm(`Delete ${person.name} ?`)){
+
+
+const Persons = ({person, persons, setPersons}) => {
+
+    const handleDelete = (person) => {
         personService.deleted(person.id)
-            .then(response => {
-                response.data = {}
+            .then(() => {
+                const id = person.id
+                window.confirm(`Delete ${person.name} ?`)
+                setPersons(persons.filter(person => person.id !== id ))
             })
-    }
 }
 
-const Persons = ({person}) => {
     return (
             <div >
                 {person.name}

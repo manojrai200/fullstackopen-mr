@@ -1,4 +1,4 @@
-const Notification = ({ message, errorMessage }) => {
+const Notification = ({ message }) => {
 
   return (
     <div>
@@ -15,22 +15,6 @@ const Notification = ({ message, errorMessage }) => {
       >
         {message}
       </div>)}
-
-      {errorMessage.length > 0 && (<div className='message' 
-          style={{
-              color: 'red',
-              background: 'lightgrey',
-              fontSize: '20px',
-              borderStyle: 'solid',
-              borderRadius: '5px',
-              padding: '10px',
-              marginBottom: '10px'
-          }}  
-      >
-        {errorMessage}
-      </div>)}
-
-
     </div>
 
   )
