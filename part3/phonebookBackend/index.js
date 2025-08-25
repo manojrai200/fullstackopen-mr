@@ -1,4 +1,6 @@
 const express = require('express')
+const morgan = require("morgan")
+
 const app = express()
 
 let persons = [
@@ -24,17 +26,13 @@ let persons = [
     }
 ]
 
-const requestLogger = (request, response, next) => {
-    console.log('Method: ', request.method)
-    console.log('Path: ', request.path)
-    console.log('Body: ', request.body)
-    console.log('___')
-    next()
-}
-
 app.use(express.json())
-app.use(requestLogger)
 
+morgan.token('body', function (request, response) { return JSON.stringify(request.body) })
+
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+);
 
 app.get('/api/persons', (request, response) => {
     response.json(persons)
@@ -61,10 +59,10 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 const generateId = () => {
-    const maxId =
-        persons.length > 0 ? Math.max(...persons.map((n) => Number(n.id))) : 0
-    return String(maxId + 1)
+    return String(Math.floor(Math.random()*1e9))
 }
+
+
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
@@ -87,7 +85,7 @@ app.post('/api/persons', (request, response) => {
 
     persons = persons.concat(person)
 
-    response.json(person)
+    response.json({ received: body })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
