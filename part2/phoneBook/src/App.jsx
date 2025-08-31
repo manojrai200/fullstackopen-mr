@@ -1,43 +1,37 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
+import personService from './services/persons'
 import Filter from './component/Filter'
 import PersonForm from './component/PersonForm'
 import Persons from './component/Persons'
-import personService from './services/persons'
 import Notification from './component/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
-  const [message, setMessage] = useState('')
-
   useEffect(() => {
     personService
       .getAll()
-      .then(intialPerson => {
-        setPersons(intialPerson)
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }, [])
 
-  const [searchTerm, setSearchTerm] = useState('');
-
-
-  const filteredPersons = persons.filter(person =>
-    person.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+  const [searchName, setSearchName] = useState('')
+  const filterpersons = persons.filter(person => person.name.toLowerCase().includes(searchName.toLowerCase()))
+  const [message, setMessage] = useState(null)
+  const [sucess, setSuccess] = useState(false);
+  const [error, setError] = useState(false)
 
   return (
     <div>
-      <h1>Phonebook</h1>
-      <Notification message={message} />
-      <Filter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      <h1>add a new</h1>
-      <PersonForm persons={persons} setPersons={setPersons} setMessage={setMessage} />
-
-
-      <h1>Numbers</h1>
+      <h2>Phonebook</h2>
+      <Notification message={message} success={sucess} error={error} />
+      <Filter searchName={searchName} setSearchName={setSearchName} />
+      <h2>add a new</h2>
+      <PersonForm persons={persons} setPersons={setPersons} setMessage={setMessage} setSuccess={setSuccess} setError={setError} />
+      <h2>Numbers</h2>
       <div>
-        {filteredPersons.map(person =>
-          <Persons key={person.id} person={person} persons={persons} setPersons={setPersons}/>
+        {filterpersons.map(person =>
+          <Persons key={person.id} person={person} persons={persons} setPersons={setPersons} />
         )}
       </div>
     </div>

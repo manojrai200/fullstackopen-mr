@@ -1,36 +1,37 @@
 import { useEffect, useState } from "react"
-import axios from "axios";
-
+import axios from "axios"
+import FilterCountries from "./component/FilterCountries"
+import Countries from "./component/Countries"
+import ShowCountry from "./component/showCountry"
 
 function App() {
   const [countries, setCountries] = useState([])
-  const [searchCountries, setSearchCountries] = useState('')
+  const [filter, setFilter] = useState("")
+  const [showCountry, setShowCountry] = useState(null)
 
   useEffect(() => {
-
-
-    axios
-      .get(`https://studies.cs.helsinki.fi/restcountries/api/all`)
+    axios.get("https://studies.cs.helsinki.fi/restcountries/api/all")
       .then(response => {
         setCountries(response.data)
       })
   }, [])
 
-  const handleChange = (e) => {
-    setSearchCountries(e.target.value)
-    const filteredCountries = countries.filter
-  }
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value)
+    setShowCountry(null)
+  };
 
-  
+  const filteredCountries = countries.filter(country =>
+    country.name.common.toLowerCase().includes(filter.toLowerCase())
+  );
+
   return (
-    <>
-      find countries <input value={searchCountries} onChange={handleChange} />
-      {countries.filter(country => country.name.common.includes(searchCountries))}
-    </>
-
-  )
+    <div>
+      <FilterCountries filter={filter} handleFilterChange={handleFilterChange} />
+      
+      {showCountry ? <ShowCountry country={showCountry} /> : <Countries countries={filteredCountries} setShowCountry={setShowCountry} />}
+    </div>
+  );
 }
 
-export default App
-
-
+export default App;

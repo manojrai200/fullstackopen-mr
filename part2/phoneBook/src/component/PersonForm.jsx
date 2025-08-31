@@ -1,78 +1,68 @@
 import { useState } from 'react'
 import personService from '../services/persons'
 
-const PersonForm = ({persons, setPersons, setMessage }) => {
+const PersonForm = ({persons, setPersons, setMessage, setError, setSuccess }) => {
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
-    const [newName, setNewName] = useState('')
-    const [newPhoneNumber, setPhoneNumber] = useState('')
-
-    
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
-
-        if (!newName.trim() || !newPhoneNumber.trim()) {
-            alert('Please fill in both name and phone fields');
-            return;
-        }
-
-        const obj = {
-        name: newName,
-        number: newPhoneNumber
-        }
-
-        if(persons.some(person => person.name === newName)){
-            if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
-                let person = persons.find(person => person.name === newName)
-                let id = person.id
-                let updatedPerson = {...person, number: newPhoneNumber}
-                
-                personService.update(id, updatedPerson)
-                    .then(returnedPerson => {
-                        setPersons(persons.map(person => person.id ===  id ? returnedPerson : person))
-                        setNewName('')
-                        setPhoneNumber('')
-                    })
-            }
-        }else{
-                personService.create(obj)
-                    .then(returnedPerson => {
-
-                        
-
-                        setPersons(persons.concat(returnedPerson))
-
-                        setMessage(`Added ${newName}`)
-
-                        setNewName('')
-                        setPhoneNumber('')
-                        setTimeout(() => {
-                            setMessage('')
-                        }, 2000)
-                })
-                
-
-        }
-
-
-
+  const addPerson = (event) => {
+    event.preventDefault()
+    const personObj = {
+      name: newName,
+      number: newNumber,
     }
+    const sameNamePerson = persons.find(person => person.name === newName)
+    if(sameNamePerson){
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+        personService
+          .update(sameNamePerson.id, personObj)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id === sameNamePerson.id ? returnedPerson : person))
+            setNewName('')
+            setNewNumber('')
+            setMessage(`Added ${newName}`)
+            setSuccess(true)
+            setTimeout(() => {
+              setSuccess(false)
+            }, 5000)            
+          })
+          .catch(() => {
+            setMessage(`Information of ${newName} has already been removed from server`)
+            setError(true)
+            setTimeout(() => {
+              setError(false)
+            }, 5000)
+          })
+      }
+    }else {
+      personService
+        .create(personObj)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          setMessage(`Added ${newName}`)
+          setSuccess(true)
+          setTimeout(() => {
+            setSuccess(false)
+          }, 5000)   
+        })
+    }
+  }
 
-    return (
+  return(
+      <form onSubmit={addPerson}>
         <div>
-            <form onSubmit={handleSubmit}> 
-            <div>
-                name: <input value={newName} onChange={(e) => setNewName(e.target.value)} />
-            </div>
-            <div>
-                number: <input value={newPhoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-            </div>
-            <div>
-                <button type="submit">add</button>
-            </div>
-            </form>
+          name: <input value={newName} onChange={(e) => setNewName(e.target.value)} required />
         </div>
-    )
+        <div>
+          number: <input value={newNumber} onChange={(e) => setNewNumber(e.target.value)} required />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+  )
 }
 
 export default PersonForm

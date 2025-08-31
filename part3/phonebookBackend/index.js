@@ -1,6 +1,6 @@
 const express = require('express')
 const morgan = require("morgan")
-
+const cors = require("cors")
 const app = express()
 
 let persons = [
@@ -25,7 +25,7 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
-
+app.use(cors())
 app.use(express.json())
 
 morgan.token('body', function (request, response) { return JSON.stringify(request.body) })
@@ -35,6 +35,7 @@ app.use(
 );
 
 app.get('/api/persons', (request, response) => {
+    console.log(request)
     response.json(persons)
 })
 
@@ -93,6 +94,19 @@ app.delete('/api/persons/:id', (request, response) => {
     persons = persons.filter((person) => person.id !== id)
 
     response.status(204).end()
+})
+
+app.put('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    persons = persons.map(person => {
+        if(person.id === id){
+            return request.body
+        }else{
+            return person
+        }
+    })
+    response.status(204).end()
+
 })
 
 const unKnownEndPoint = (request, response) => {

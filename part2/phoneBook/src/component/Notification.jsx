@@ -1,22 +1,15 @@
-const Notification = ({ message }) => {
+import '../index.css'
+const Notification = ({ message, error, success }) => {
 
   return (
     <div>
-      {message.length > 0 && (<div className='message' 
-          style={{
-              color: 'green',
-              background: 'lightgrey',
-              fontSize: '20px',
-              borderStyle: 'solid',
-              borderRadius: '5px',
-              padding: '10px',
-              marginBottom: '10px'
-          }}  
-      >
+      {success && <div className='success'>
         {message}
-      </div>)}
+      </div>}
+      {error && <div className='error'>
+        {message}
+      </div>}
     </div>
-
   )
 }
 
