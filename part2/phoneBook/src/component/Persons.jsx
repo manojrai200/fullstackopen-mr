@@ -1,22 +1,14 @@
-import personService from '../services/persons'
 
-const Persons = ({person, persons, setPersons}) => {
-  const hanldeDelete = () => {
-    if(window.confirm(`Delete ${person.name}`)){
-      personService
-        .remove(person.id)
-        .then(() => {
-          setPersons(persons.filter(p => p.id !== person.id))
-        })
-        .catch(error => {
-            console.error('Delete Failed:', error)
-        })
-    }
+const Persons = ({ filterpersons, hanldeDelete }) => {
 
-  }
   return (
     <div>
-      {person.name} {person.number} <button onClick={hanldeDelete}>delete</button>
+      {filterpersons.map((person, index) => 
+        <div key={index}>
+          {person.name} {person.number} 
+          <button onClick={() => {hanldeDelete(person)}}>delete</button>
+        </div>
+      )}
     </div>
   )
 }

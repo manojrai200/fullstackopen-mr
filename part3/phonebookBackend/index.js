@@ -27,15 +27,14 @@ let persons = [
 ]
 app.use(cors())
 app.use(express.json())
+app.use(express.static("dist"))
 
 morgan.token('body', function (request, response) { return JSON.stringify(request.body) })
-
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 
 app.get('/api/persons', (request, response) => {
-    console.log(request)
     response.json(persons)
 })
 
@@ -73,7 +72,7 @@ app.post('/api/persons', (request, response) => {
         error: 'name or number is missing',
     })
     }else if(persons.some(person => person.name === body.name)){
-        return response.json(
+        return response.status(400).json(
             {error: 'name must be unique'}
         )
     }
@@ -86,7 +85,7 @@ app.post('/api/persons', (request, response) => {
 
     persons = persons.concat(person)
 
-    response.json({ received: body })
+    response.json(person)
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -96,16 +95,17 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
-app.put('/api/persons/:id', (request, response) => {
+app.put('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
-    persons = persons.map(person => {
-        if(person.id === id){
-            return request.body
-        }else{
-            return person
-        }
-    })
-    response.status(204).end()
+    const { name, number } = request.body
+
+    const person = persons.find(person => person.id === id)
+    if(!person){
+        return next()
+    }
+
+    person.number = number
+    response.json(person)
 
 })
 
@@ -115,7 +115,7 @@ const unKnownEndPoint = (request, response) => {
 
 app.use(unKnownEndPoint)
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
