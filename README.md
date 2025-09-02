@@ -9,4 +9,4 @@ It allows users to:
 
 This project demonstrates fundamental **CRUD (Create, Read, Update, Delete)** operations in a clean and user-friendly interface.  
 
-🔗 **Live Demo:** [Phonebook WebApp](https://fullstackopen-mr-1.onrender.com)
+🔗 **Live Demo:** [Phonebook WebApp](https://fullstackopen-mr-1.onrender.com/)
