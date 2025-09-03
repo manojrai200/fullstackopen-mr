@@ -1,15 +1,24 @@
+const blogsRouter = require("../controllers/blogs")
+const blog = require("../models/blog")
+
 const dummy = (blogs) => {
     return 1
 }
 
 const totalLikes = (blogs) => {
-    return blogs.reduce(
-        (sum, blog) => sum + blog.likes ,
-        0,
-    )
+    if(blogs.length === 1){
+        return blogs[0].likes
+    }
 }
 
+const favoriteBlog = (blogs) => {
+    return blogs.reduce((max, blog) =>
+        blog.likes > max.likes ? blog : max
+    )
+}
+ 
 module.exports = {
     dummy,
-    totalLikes
+    totalLikes,
+    favoriteBlog
 }
