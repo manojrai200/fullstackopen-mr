@@ -147,7 +147,7 @@ describe('most blogs', () => {
   })
 })
 
-describe('most blogs', () => {
+describe('most likes', () => {
   const blogs = [
     {
       _id: "5a422a851b54a676234d17f7",
@@ -199,12 +199,12 @@ describe('most blogs', () => {
     }  
   ]
 
-  test('return the author who has the largest amount of blogs, return value also contains the number of blogs the top author has, if there are many top bloggers, then it is enough to return any one of them', () => {
+  test('returns the author whose blog posts have the largest amount of likes, also contains the total number of likes that the author has received, if there are many top bloggers, then it is enough to show any one of them', () => {
     const expected = {
-      author: 'Robert C. Martin',
-      blogs: 3
+      author: 'Edsger W. Dijkstra',
+      likes: 17
     }
-    const result = listHelper.mostBlogs(blogs)
+    const result = listHelper.mostLikes(blogs)
     assert.deepStrictEqual(result, expected)
   })
 })
