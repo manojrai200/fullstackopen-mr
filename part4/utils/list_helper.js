@@ -1,5 +1,4 @@
-const blogsRouter = require("../controllers/blogs")
-const blog = require("../models/blog")
+const _ = require('lodash')
 
 const dummy = (blogs) => {
     return 1
@@ -16,9 +15,25 @@ const favoriteBlog = (blogs) => {
         blog.likes > max.likes ? blog : max
     )
 }
+
+const mostBlogs = (blogs) => {
+    const blogCount = _.countBy(blogs, 'author')
+    const authorCounts = _.map(blogCount, (count, author) => ({
+        author: author,
+        blogs: count
+    }))
+    return _.maxBy(authorCounts, 'blogs')
+}
+
+const mostLikes = (blogs) => {
+
+    return
+}
  
 module.exports = {
     dummy,
     totalLikes,
-    favoriteBlog
+    favoriteBlog,
+    mostBlogs,
+    mostLikes
 }
