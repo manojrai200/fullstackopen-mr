@@ -30,8 +30,20 @@ test('blogs are returned as json', async () => {
 })
 
 test('blog posts have unique identifier property named id', async () => {
-  const response = await api.get('/api/blogs')
-  const blog = response.body[0]
+  const newBlog = {
+    title: "React patterns",
+    author: "Michael Chan",
+    url: "https://reactpatterns.com/",
+    likes: 7
+  }
+
+  const response = await api
+  .post('/api/blogs')
+  .send(newBlog)
+  .expect(201)
+  .expect('Content-Type', /application\/json/)
+  
+  const blog = response.body
 
   assert.ok(blog.id, 'id property is defined')
   assert.strictEqual(blog._id, undefined)
@@ -63,16 +75,14 @@ test('verifies that if the likes property is missing from the request, it will d
   }
 
 
-  await api
+  const response = await api
     .post('/api/blogs')
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
-    const response = await api.get('/api/blogs')
     // console.log(response.body)
-    const blog = response.body[1]
-    assert.strictEqual(blog.likes, 0)
+    assert.strictEqual(response.body.likes, 0)
 })
 
 test('bolg without title and url is not added', async () => {
