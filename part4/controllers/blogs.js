@@ -2,6 +2,7 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const { userExtractor } = require('../utils/middleware')
 
 
 
@@ -10,15 +11,10 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', userExtractor, async (request, response, next) => {
+
   const body = request.body
-
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-
-  const user = await User.findById(decodedToken.id)
+  const user = request.user
   if(!user){
     return response.status(400).json({ error: 'userId missing or not valid' })
   }
@@ -30,21 +26,21 @@ blogsRouter.post('/', async (request, response) => {
     user: user._id,
     likes: body.likes
   })
+  
+  try{
+    const savedBlog = await blog.save()
+    user.blogs = user.blogs.concat(savedBlog._id)  
+    await user.save()
 
-  const savedBlog = await blog.save()
-  user.blogs = user.blogs.concat(savedBlog._id)  
-  await user.save()
-
-  response.status(201).json(savedBlog)
-})
-
-blogsRouter.delete('/:id', async (request, response) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
+    response.status(201).json(savedBlog)
+  } catch(error) {
+    next(error)
   }
 
-  const user = await User.findById(decodedToken.id)
+})
+
+blogsRouter.delete('/:id', userExtractor, async (request, response) => {
+  const user = request.user
   if(!user){
     return response.status(400).json({ error: 'userId missing or not valid' })
   }
@@ -62,20 +58,25 @@ blogsRouter.delete('/:id', async (request, response) => {
   }
 })
 
-blogsRouter.put('/:id', async (request, response) => {
+blogsRouter.put('/:id', async (request, response, next) => {
   const { title, author, url, likes } = request.body
 
-  const blog = await Blog.findById(request.params.id)
+  try{
+    const blog = await Blog.findById(request.params.id)
 
-  if(!blog) return response.status(400).end()
-    
-  blog.title = title
-  blog.author = author
-  blog.url = url
-  blog.likes = likes
+    if(!blog) return response.status(400).end()
+      
+    blog.title = title
+    blog.author = author
+    blog.url = url
+    blog.likes = likes
 
-  const updatedBlog = await blog.save()
-  response.json(updatedBlog)
+    const updatedBlog = await blog.save()
+    response.json(updatedBlog)
+  } catch (error) {
+    next(error)
+  }
+
 })
 
 module.exports = blogsRouter

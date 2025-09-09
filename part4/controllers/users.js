@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
 
-usersRouter.post('/', async (request, response) => {
+usersRouter.post('/', async (request, response, next) => {
   try{
     const { username, name, password } = request.body
     if(!password || password.length < 3){
@@ -20,7 +20,7 @@ usersRouter.post('/', async (request, response) => {
     const savedUser = await user.save()
     response.status(201).json(savedUser)
   }catch (error) {
-    return response.status(400).json(error.message)
+    next(error)
   }
 
 })
