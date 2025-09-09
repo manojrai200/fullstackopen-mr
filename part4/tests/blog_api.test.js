@@ -5,12 +5,27 @@ const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
+const User = require('../models/user')
+const bcrypt = require("bcrypt");
 
 const api = supertest(app)
+let token
 
 describe('when there is initially some notes saved', () => {
   beforeEach(async () => {
     await Blog.deleteMany({})
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash("testing", 10)
+    const user = new User({ username: "test", passwordHash })
+    await user.save()
+
+    const loginRes = await api.post("/api/login").send({
+      username: "test",
+    password: "testing",
+    });
+    token = loginRes.body.token
+
     await Blog.insertMany(helper.initialBlogs)
   })
 
@@ -39,6 +54,7 @@ describe('when there is initially some notes saved', () => {
       const response = await api
       .post('/api/blogs')
       .send(newBlog)
+      .set({Authorization: `Bearer ${token}`})
       .expect(201)
       .expect('Content-Type', /application\/json/)
       
@@ -59,6 +75,7 @@ describe('when there is initially some notes saved', () => {
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set({Authorization: `Bearer ${token}`})
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
@@ -76,6 +93,7 @@ describe('when there is initially some notes saved', () => {
       const response = await api
         .post('/api/blogs')
         .send(newBlog)
+        .set({Authorization: `Bearer ${token}`})
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
@@ -92,6 +110,7 @@ describe('when there is initially some notes saved', () => {
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set({Authorization: `Bearer ${token}`})
         .expect(400)
         .expect('Content-Type', /application\/json/)
 
@@ -99,6 +118,24 @@ describe('when there is initially some notes saved', () => {
         assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length)
     })
 
+    test('adding a blog fails, if a token is not provided', async () => {
+      const newBlog = {
+        title: "React patterns",
+        author: "Michael Chan",
+        url: "https://reactpatterns.com/",
+        likes: 4
+      }
+
+
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/)
+
+        // const blogAtEnd = await helper.blogInDb()
+        // assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length)
+    })
   })
 
 })
