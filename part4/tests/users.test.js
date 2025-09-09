@@ -1,9 +1,13 @@
+const { test, describe, beforeEach, after } = require('node:test')
+const assert = require('node:assert')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const helper = require('./test_helper')
+const mongoose = require('mongoose')
+const supertest = require('supertest')
+const app = require('../app')
 
-const { test, describe, beforeEach } = require('node:test')
-const assert = require('node:assert')
+const api = supertest(app)
 
 describe('when there is initially one user in db', () => {
   beforeEach(async () => {
@@ -36,4 +40,8 @@ describe('when there is initially one user in db', () => {
     const usernames = usersAtEnd.map(u => u.username)
     assert(usernames.includes(newUser.username))
   })
+})
+
+after(async () => {
+  await mongoose.connection.close()
 })
