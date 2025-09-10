@@ -132,9 +132,6 @@ describe('when there is initially some notes saved', () => {
         .send(newBlog)
         .expect(401)
         .expect('Content-Type', /application\/json/)
-
-        // const blogAtEnd = await helper.blogInDb()
-        // assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length)
     })
   })
 
