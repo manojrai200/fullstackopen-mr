@@ -22,8 +22,8 @@ describe('when there is initially some notes saved', () => {
 
     const loginRes = await api.post("/api/login").send({
       username: "test",
-    password: "testing",
-    });
+      password: "testing",
+    })
     token = loginRes.body.token
 
     await Blog.insertMany(helper.initialBlogs)
@@ -52,11 +52,11 @@ describe('when there is initially some notes saved', () => {
       }
 
       const response = await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .set({Authorization: `Bearer ${token}`})
-      .expect(201)
-      .expect('Content-Type', /application\/json/)
+        .post('/api/blogs')
+        .send(newBlog)
+        .set({Authorization: `Bearer ${token}`})
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
       
       const blog = response.body
 
@@ -75,12 +75,14 @@ describe('when there is initially some notes saved', () => {
       await api
         .post('/api/blogs')
         .send(newBlog)
-        .set({Authorization: `Bearer ${token}`})
+        .set({
+          Authorization: `Bearer ${token}`
+        })
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
-        const blogAtEnd = await helper.blogInDb()
-        assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length + 1)
+      const blogAtEnd = await helper.blogInDb()
+      assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length + 1)
     })
 
     test('verifies that if the likes property is missing from the request, it will default to the value 0', async () => {
@@ -97,7 +99,7 @@ describe('when there is initially some notes saved', () => {
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
-        assert.strictEqual(response.body.likes, 0)
+      assert.strictEqual(response.body.likes, 0)
     })
 
     test('bolg without title and url is not added', async () => {
@@ -114,8 +116,8 @@ describe('when there is initially some notes saved', () => {
         .expect(400)
         .expect('Content-Type', /application\/json/)
 
-        const blogAtEnd = await helper.blogInDb()
-        assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length)
+      const blogAtEnd = await helper.blogInDb()
+      assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length)
     })
 
     test('adding a blog fails, if a token is not provided', async () => {

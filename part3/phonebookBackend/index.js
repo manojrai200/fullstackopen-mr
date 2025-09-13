@@ -25,8 +25,8 @@ app.get('/info', (request, response) => {
   const length = 0
   Person.find({}).then(persons => {
     response.send(
-        `<div>Phonebook has info for ${persons.length} people</div>
-        <div>${now}</div>
+      `<div>Phonebook has info for ${persons.length} people</div>
+      <div>${now}</div>
     `)
   })
 })

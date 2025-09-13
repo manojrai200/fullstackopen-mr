@@ -134,7 +134,7 @@ describe('most blogs', () => {
       url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
       likes: 2,
       __v: 0
-    }  
+    }
   ]
 
   test('return the author who has the largest amount of blogs, return value also contains the number of blogs the top author has, if there are many top bloggers, then it is enough to return any one of them', () => {
@@ -196,7 +196,7 @@ describe('most likes', () => {
       url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
       likes: 2,
       __v: 0
-    }  
+    }
   ]
 
   test('returns the author whose blog posts have the largest amount of likes, also contains the total number of likes that the author has received, if there are many top bloggers, then it is enough to show any one of them', () => {
