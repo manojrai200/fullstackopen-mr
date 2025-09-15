@@ -3,6 +3,8 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import CreateBlogForm from './components/CreateBlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -18,7 +20,9 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    ).catch(error => {
+      console.log(error)
+    })
   }, [])
 
  useEffect(() => {
@@ -82,6 +86,20 @@ const App = () => {
 
   }
 
+  const createBlogForm = () => (
+    <Togglable buttonLabel='creat new blog'>
+      <CreateBlogForm
+        createBlog={createBlog}
+        setTitle={setTitle}
+        setAuthor={setAuthor}
+        setUrl={setUrl}
+        title={title}
+        author={author}
+        url={url}
+      />
+    </Togglable>
+  )
+
   if (user === null) {
     return (
       <div>
@@ -121,39 +139,7 @@ const App = () => {
       <p>{user.name} logged in
         <button onClick={handleLogout}>logout</button>
       </p>
-      <div>
-        <form onSubmit={createBlog}>
-          <div>
-            <label>
-              title:
-              <input
-                value={title}
-                onChange={({ target }) => setTitle(target.value)}
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              author:
-              <input
-                value={author}
-                onChange={({ target }) => setAuthor(target.value)}
-              />
-            </label>
-            <div>
-              <label>
-                url:
-                <input
-                  value={url}
-                  onChange={({ target }) => setUrl(target.value)}
-                />
-              </label>
-            </div>
-
-          </div>
-          <button type='submit'>create</button>
-        </form>
-      </div>
+      {user && createBlogForm()}
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
