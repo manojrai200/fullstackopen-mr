@@ -22,7 +22,7 @@ const Blog = ({ blog }) => {
       {showBlog && <div>
         {blog.title} <button onClick={handleShow}>hide</button> <br />
         {blog.url} <br />
-        {blog.likes} <button>like</button> <br />
+        likes {blog.likes}<button>like</button> <br />
         {blog.author} <br />
       </div>}
   </div>
