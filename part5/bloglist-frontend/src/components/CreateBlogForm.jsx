@@ -12,8 +12,6 @@ const CreateBlogForm = ({ createBlog, setMessage, setStatus }) => {
       author: author,
       url: url
     })
-
-
     setTitle('')
     setAuthor('')
     setUrl('')
@@ -25,6 +23,7 @@ const CreateBlogForm = ({ createBlog, setMessage, setStatus }) => {
     }, 5000)
 
   }
+  
   return (
     <div>
       <form onSubmit={addBlog}>
