@@ -13,9 +13,6 @@ const App = () => {
   const [message, setMessage] = useState(null)
   const [status, setStatus] = useState(null)
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
  
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -61,41 +58,18 @@ const App = () => {
     setUser(null)
   }
 
-  const createBlog = (e) => {
-    e.preventDefault()
-
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url
-    }
-
-    blogService.create(newBlog).then(returnedBlog => {
+  const addBlog = (blogObj) => {
+    blogService.create(blogObj).then(returnedBlog => {
       setBlogs(blogs.concat(returnedBlog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
     })
-
-    setMessage(`a new blog ${title} by ${author} added`)
-    setStatus('success')
-    setTimeout(() => {
-      setMessage('')
-      setStatus(null)
-    }, 5000)
-
   }
 
   const createBlogForm = () => (
     <Togglable buttonLabel='creat new blog'>
       <CreateBlogForm
-        createBlog={createBlog}
-        setTitle={setTitle}
-        setAuthor={setAuthor}
-        setUrl={setUrl}
-        title={title}
-        author={author}
-        url={url}
+        createBlog={addBlog}
+        setMessage={setMessage}
+        setStatus={setStatus}
       />
     </Togglable>
   )

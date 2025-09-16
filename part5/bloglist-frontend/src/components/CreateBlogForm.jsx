@@ -1,14 +1,40 @@
-const CreateBlogForm = (props) => {
+import { useState } from "react"
+
+const CreateBlogForm = ({ createBlog, setMessage, setStatus }) => {
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+  const addBlog = (e) => {
+    e.preventDefault()
+
+    createBlog ({
+      title: title,
+      author: author,
+      url: url
+    })
+
+
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+    setMessage(`a new blog ${title} by ${author} added`)
+    setStatus('success')
+    setTimeout(() => {
+      setMessage('')
+      setStatus(null)
+    }, 5000)
+
+  }
   return (
     <div>
-      <form onSubmit={props.createBlog}>
+      <form onSubmit={addBlog}>
         <div>
           <label>
             title:
             <input
               type="text"
-              value={props.title}
-              onChange={({ target }) => {props.setTitle(target.value)}}
+              value={title}
+              onChange={({ target }) => {setTitle(target.value)}}
             />
           </label>
         </div>
@@ -17,8 +43,8 @@ const CreateBlogForm = (props) => {
             author:
             <input
               type="text"
-              value={props.author}
-              onChange={({ target }) => {props.setAuthor(target.value)}}
+              value={author}
+              onChange={({ target }) => {setAuthor(target.value)}}
             />
           </label>
         </div>
@@ -27,8 +53,8 @@ const CreateBlogForm = (props) => {
             url:
             <input
               type="text"
-              value={props.url}
-              onChange={({ target }) => {props.setUrl(target.value)}}
+              value={url}
+              onChange={({ target }) => {setUrl(target.value)}}
             />
           </label>
         </div>
