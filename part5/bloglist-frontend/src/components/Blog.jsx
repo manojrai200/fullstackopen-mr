@@ -14,6 +14,15 @@ const Blog = ({ blog }) => {
   const handleShow = () => {
     setShowBlog(!showBlog)
   }
+
+  // const handleLikes = () => {
+  //   const updateBlog = {
+  //     blog.title,
+
+
+  //   }
+  // }
+
   return (
     <div style={blogStyle}>
       {!showBlog && <div>
