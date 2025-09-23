@@ -5,6 +5,7 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import CreateBlogForm from './components/CreateBlogForm'
 import Togglable from './components/Togglable'
+// import blog from '../../bloglist-backend/models/blog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -64,6 +65,21 @@ const App = () => {
     })
   }
 
+  const updateLike = async (blog) => {
+    const updateBlog = {
+      user: blog.user.id,
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1
+    }
+
+    await blogService.update(blog.id, updateBlog)
+      .then(updatedBlog => {
+        setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b))
+      })
+  }
+
   const createBlogForm = () => (
     <Togglable buttonLabel='creat new blog'>
       <CreateBlogForm
@@ -107,7 +123,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <>
       <h2>blogs</h2>
       <Notification status={status} message={message} />
       <p>{user.name} logged in
@@ -115,9 +131,9 @@ const App = () => {
       </p>
       {user && createBlogForm()}
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateLike={updateLike}/>
       )}
-    </div>
+    </>
   )
 }
 
