@@ -24,10 +24,13 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div className="blog" style={blogStyle}>
       {!showBlog && (
         <div>
-          {blog.title} {blog.author} <button onClick={handleShow}>view</button>
+          <span>{blog.title}</span> <span>{blog.author}</span>{" "}
+          <span>
+            <button onClick={handleShow}>view</button>
+          </span>
         </div>
       )}
       {showBlog && (
