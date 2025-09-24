@@ -1,7 +1,10 @@
 import { useState } from "react"
+import blogService from '../services/blogs'
 
-const Blog = ({ blog, updateLike }) => {
+
+const Blog = ({ blog, blogs, setBlogs }) => {
   const [showBlog, setShowBlog] = useState(false)
+  console.log('bloggg', blog)
 
   const blogStyle = {
     paddingTop: 10,
@@ -16,8 +19,21 @@ const Blog = ({ blog, updateLike }) => {
   }
 
   const handleLike = () => {
-    updateLike(blog)
+    const updateBlog = {
+      user: blog.user.id,
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1
+    }
+
+   blogService.update(blog.id, updateBlog)
+      .then(updatedBlog => {
+        console.log(updatedBlog)
+        setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b))
+      })
   }
+
 
   return (
     <div style={blogStyle}>
