@@ -31,6 +31,8 @@ const App = () => {
     }
   }, [])
 
+  const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
+
   const handleLogin = async event => {
     event.preventDefault()
     
@@ -130,7 +132,7 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </p>
       {user && createBlogForm()}
-      {blogs.map(blog =>
+      {sortedBlogs.map(blog =>
         <Blog key={blog.id} blog={blog} updateBlog={updateblog}/>
       )}
     </>
