@@ -1,7 +1,4 @@
-import { useState } from "react";
-
-const Blog = ({ blog, user, updateBlog, removeBlog, showBlog, toggleView }) => {
-  const [view, setViwe] = useState(null);
+const Blog = ({ blog, user, updateBlog, removeBlog, view, toggleView }) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -24,9 +21,7 @@ const Blog = ({ blog, user, updateBlog, removeBlog, showBlog, toggleView }) => {
       <div>
         <span>{blog.title}</span> <span>{blog.author}</span>{" "}
         <button
-          onClick={() => {
-            setViwe(!view);
-          }}
+          onClick={()=> {toggleView()}}
         >
           {view ? "hide" : "view"}
         </button>
