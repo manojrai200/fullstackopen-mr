@@ -20,8 +20,8 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   };
 
   const handleRemove = () => {
-    removeBlog(blog)
-  }
+    removeBlog(blog);
+  };
 
   return (
     <div style={blogStyle}>
