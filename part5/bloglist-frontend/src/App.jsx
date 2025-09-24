@@ -13,6 +13,8 @@ const App = () => {
   const [message, setMessage] = useState(null);
   const [status, setStatus] = useState(null);
   const [user, setUser] = useState(null);
+  const [showBlog, setShowBlog] = useState(false);
+
 
   useEffect(() => {
     blogService
@@ -52,6 +54,10 @@ const App = () => {
         setStatus(null);
       }, 5000);
     }
+  };
+
+  const handleView = () => {
+    setShowBlog(!showBlog);
   };
 
   const handleLogout = () => {
@@ -141,6 +147,8 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
+          showBlog={showBlog}
+          toggleView={handleView}
           updateBlog={updateblog}
           removeBlog={removeBlog}
         />
