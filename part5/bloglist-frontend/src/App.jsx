@@ -16,6 +16,7 @@ const App = () => {
   const [showBlog, setShowBlog] = useState(false);
 
 
+
   useEffect(() => {
     blogService
       .getAll()
@@ -56,9 +57,7 @@ const App = () => {
     }
   };
 
-  const handleView = () => {
-    setShowBlog(!showBlog);
-  };
+
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBlogappUser");
@@ -147,8 +146,9 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
+          user={user}
           showBlog={showBlog}
-          toggleView={handleView}
+          toggleView={() => {setShowBlog(!showBlog)}}
           updateBlog={updateblog}
           removeBlog={removeBlog}
         />

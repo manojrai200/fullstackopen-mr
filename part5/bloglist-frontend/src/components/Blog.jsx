@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-const Blog = ({ blog, showBlog, toggleView, updateBlog, removeBlog }) => {
+const Blog = ({ blog, user, updateBlog, removeBlog, showBlog, toggleView }) => {
+  const [view, setViwe] = useState(null);
 
   const blogStyle = {
     paddingTop: 10,
@@ -20,25 +21,40 @@ const Blog = ({ blog, showBlog, toggleView, updateBlog, removeBlog }) => {
 
   return (
     <div className="blog" style={blogStyle}>
-      {!showBlog && (
+      <div>
+        <span>{blog.title}</span> <span>{blog.author}</span>{" "}
+        <button
+          onClick={() => {
+            setViwe(!view);
+          }}
+        >
+          {view ? "hide" : "view"}
+        </button>
+      </div>
+      {view && (
         <div>
-          <span>{blog.title}</span> <span>{blog.author}</span>{" "}
-          <span>
-            <button onClick={toggleView}>view</button>
-          </span>
-        </div>
-      )}
-      {showBlog && (
-        <div>
-          {blog.title} <button onClick={toggleView}>hide</button> <br />
-          <a href={blog.url} target="blank">
-            {blog.url}
-          </a>{" "}
-          <br />
-          likes {blog.likes}
-          <button onClick={handleLike}>like</button> <br />
-          {blog.author} <br />
-          <button onClick={handleRemove}>remove</button>
+          <div>
+            <a href={blog.url} target="blank">
+              {blog.url}
+            </a>
+          </div>
+          <div>
+            {blog.likes}
+            <button onClick={handleLike}>like</button>
+          </div>
+          <div>{blog.user.name}</div>
+          {user.username === blog.user.username && (
+            <button
+              style={{
+                backgroundColor: "#1e90ff",
+                borderRadius: "4px",
+                border: "none",
+              }}
+              onClick={handleRemove}
+            >
+              remove
+            </button>
+          )}
         </div>
       )}
     </div>
