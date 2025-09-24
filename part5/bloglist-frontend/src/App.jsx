@@ -5,7 +5,6 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import CreateBlogForm from './components/CreateBlogForm'
 import Togglable from './components/Togglable'
-// import blog from '../../bloglist-backend/models/blog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -65,6 +64,20 @@ const App = () => {
     })
   }
 
+  const updateblog = (blog) => {
+    const updateBlog = {
+      user: blog.user.id,
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1
+    }
+
+   blogService.update(blog.id, updateBlog)
+      .then(updatedBlog => {
+        setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b))
+      })
+  }
 
 
   const createBlogForm = () => (
@@ -118,7 +131,7 @@ const App = () => {
       </p>
       {user && createBlogForm()}
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs}/>
+        <Blog key={blog.id} blog={blog} updateBlog={updateblog}/>
       )}
     </>
   )
