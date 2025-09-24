@@ -1,5 +1,4 @@
-const Blog = ({ blog, user, updateBlog, removeBlog, view, toggleView }) => {
-
+const Blog = ({ blog, user, handleLike, removeBlog, view, toggleView }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -8,20 +7,16 @@ const Blog = ({ blog, user, updateBlog, removeBlog, view, toggleView }) => {
     marginBottom: 5,
   };
 
-  const handleLike = () => {
-    updateBlog(blog);
-  };
-
-  const handleRemove = () => {
-    removeBlog(blog);
-  };
+  const showDelete = user && blog.user && blog.user.username === user.username;
 
   return (
     <div className="blog" style={blogStyle}>
       <div>
         <span>{blog.title}</span> <span>{blog.author}</span>{" "}
         <button
-          onClick={()=> {toggleView()}}
+          onClick={() => {
+            toggleView(blog.id);
+          }}
         >
           {view ? "hide" : "view"}
         </button>
@@ -35,20 +30,30 @@ const Blog = ({ blog, user, updateBlog, removeBlog, view, toggleView }) => {
           </div>
           <div>
             {blog.likes}
-            <button onClick={handleLike}>like</button>
+            <button
+              onClick={() => {
+                handleLike(blog);
+              }}
+            >
+              {"like"}
+            </button>
           </div>
           <div>{blog.user.name}</div>
-          {user.username === blog.user.username && (
-            <button
-              style={{
-                backgroundColor: "#1e90ff",
-                borderRadius: "4px",
-                border: "none",
-              }}
-              onClick={handleRemove}
-            >
-              remove
-            </button>
+          {showDelete && (
+            <div>
+              <button
+                style={{
+                  backgroundColor: "#1e90ff",
+                  borderRadius: "4px",
+                  border: "none",
+                }}
+                onClick={() => {
+                  removeBlog(blog);
+                }}
+              >
+                remove
+              </button>
+            </div>
           )}
         </div>
       )}

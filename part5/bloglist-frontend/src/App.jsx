@@ -55,7 +55,9 @@ const App = () => {
     }
   };
 
-
+  const toggleView = (id) => {
+    setShowBlog(showBlog === id ? null : id)
+  }
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBlogappUser");
@@ -146,8 +148,8 @@ const App = () => {
           blog={blog}
           user={user}
           view={showBlog === blog.id}
-          toggleView={() => {setShowBlog(showBlog === blog.id ? null : blog.id)}}
-          updateBlog={updateblog}
+          toggleView={toggleView}
+          handleLike={updateblog}
           removeBlog={removeBlog}
         />
       ))}
