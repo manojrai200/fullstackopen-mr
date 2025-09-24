@@ -56,8 +56,8 @@ const App = () => {
   };
 
   const toggleView = (id) => {
-    setShowBlog(showBlog === id ? null : id)
-  }
+    setShowBlog(showBlog === id ? null : id);
+  };
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBlogappUser");
@@ -65,8 +65,15 @@ const App = () => {
   };
 
   const addBlog = (blogObj) => {
+
     blogService.create(blogObj).then((returnedBlog) => {
       setBlogs(blogs.concat(returnedBlog));
+      setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`);
+      setStatus("success");
+      setTimeout(() => {
+        setMessage("");
+        setStatus(null);
+      }, 5000);
     });
   };
 
