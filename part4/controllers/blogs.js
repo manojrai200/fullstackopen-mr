@@ -70,16 +70,21 @@ blogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
 })
 
 blogsRouter.put("/:id", async (request, response, next) => {
-  const { title, author, url, likes } = request.body;
-
+  const { user, title, author, url, likes } = request.body;
+const id = request.params.id
   try {
-    const updatedBlog = await Blog.findByIdAndUpdate(
-      request.params.id,
-      { title, author, url, likes },
-      { new: true, runValidators: true, context: "query" }
-    );
+    const updateData = { title, author, url, likes };
+    if(user){
+      updateData.user = user
+    }
+
+    const updatedBlog = await Blog.findByIdAndUpdate(id, updateData, {
+      new: true,
+    }).populate("user", { username: true, name: true })
+
     if (updatedBlog) {
-      response.json(updatedBlog.populate("user", { username: true, name: true }));
+      console.log(updatedBlog)
+      response.status(200).json(updatedBlog);
     } else {
       response.status(404).json({ error: "Blog not found" });
     }
