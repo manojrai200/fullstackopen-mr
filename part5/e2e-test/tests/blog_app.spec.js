@@ -29,7 +29,7 @@ describe("Blog app", () => {
     });
 
     test("fails with wrong credentials", async ({ page }) => {
-      await loginWith(page, "mluukkai", "salainen");
+      await loginWith(page, "mluukkai", "pass");
 
       await expect(page.getByText("wrong credentials")).toBeVisible();
     });
@@ -69,9 +69,45 @@ describe("Blog app", () => {
         await dialog.accept();
       });
 
-      await page.getByRole("button", {name: /remove/i }).click();
+      await page.getByRole("button", { name: /remove/i }).click();
 
-      await expect(page.getByText("test tester")).not.toBeVisible()
+      await expect(page.getByText("test tester")).not.toBeVisible();
+    });
+
+    test("only creator sees delete button", async ({ page, request }) => {
+      await page.getByRole("button", { name: "logout" }).click();
+
+      await request.post("http://localhost:3003/api/testing/reset");
+
+      await request.post("http://localhost:3003/api/users", {
+        data: {
+          name: "User1",
+          username: "user1",
+          password: "pass1",
+        },
+      });
+
+      await request.post("http://localhost:3003/api/users", {
+        data: {
+          name: "User2",
+          username: "user2",
+          password: "pass2",
+        },
+      });
+
+      await loginWith(page, "user1", "pass1");
+      await createBlog(page, "test1", "tester1", "testing.1");
+
+      await page.getByRole("button", { name: "logout" }).click();
+
+      await loginWith(page, "user2", "pass2");
+      await page.getByRole("button", { name: "view" }).click();
+
+      await createBlog(page, "test2", "tester2", "testing.2");
+
+      await expect(
+        page.getByRole("button", { name: "remove" })
+      ).not.toBeVisible();
     });
   });
 });
