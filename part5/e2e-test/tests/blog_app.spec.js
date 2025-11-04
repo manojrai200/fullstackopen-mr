@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require("@playwright/test");
-const { login, createBlog } = require("./helper");
+const { loginWith, createBlog } = require("./helper");
 
 describe("Blog app", () => {
   beforeEach(async ({ page, request }) => {
@@ -24,12 +24,12 @@ describe("Blog app", () => {
 
   describe("Login", () => {
     test("succeeds with correct credentials", async ({ page }) => {
-      await login(page, "mluukkai", "salainen");
+      await loginWith(page, "mluukkai", "salainen");
       await expect(page.getByText("Matti Luukkainen logged in")).toBeVisible();
     });
 
     test("fails with wrong credentials", async ({ page }) => {
-      await login(page, "mluukkai", "salainen");
+      await loginWith(page, "mluukkai", "salainen");
 
       await expect(page.getByText("wrong credentials")).toBeVisible();
     });
@@ -37,7 +37,7 @@ describe("Blog app", () => {
 
   describe("When logged in", () => {
     beforeEach(async ({ page }) => {
-      await login(page, "mluukkai", "salainen");
+      await loginWith(page, "mluukkai", "salainen");
     });
 
     test("a new blog can be created", async ({ page }) => {
@@ -53,6 +53,25 @@ describe("Blog app", () => {
 
       await page.getByRole("button", { name: "like" }).click();
       await expect(page.getByText("likes 1")).toBeVisible();
+    });
+
+    test("user can delete their own blog", async ({ page }) => {
+      await createBlog(page, "test", "tester", "testing.com");
+
+      await expect(page.getByText("test tester")).toBeVisible();
+      await page.getByRole("button", { name: "view" }).click();
+
+      await page.getByRole("button", { name: "remove" }).click();
+
+      page.on("dialog", async (dialog) => {
+        expect(dialog.type()).toBe("confirm");
+        expect(dialog.message()).toBe("Remove blog test");
+        await dialog.accept();
+      });
+
+      await page.getByRole("button", {name: /remove/i }).click();
+
+      await expect(page.getByText("test tester")).not.toBeVisible()
     });
   });
 });
