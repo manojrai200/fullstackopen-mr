@@ -1,4 +1,5 @@
 const { test, expect, beforeEach, describe } = require("@playwright/test");
+const { login, createBlog } = require("./helper");
 
 describe("Blog app", () => {
   beforeEach(async ({ page, request }) => {
@@ -23,38 +24,35 @@ describe("Blog app", () => {
 
   describe("Login", () => {
     test("succeeds with correct credentials", async ({ page }) => {
-      await page.getByRole("button", { name: "login" }).click();
-      await page.getByLabel("username").fill("mluukkai");
-      await page.getByLabel("password").fill("salainen");
-      await page.getByRole("button", { name: "login" }).click();
-
+      await login(page, "mluukkai", "salainen");
       await expect(page.getByText("Matti Luukkainen logged in")).toBeVisible();
     });
 
     test("fails with wrong credentials", async ({ page }) => {
-      await page.getByRole("button", { name: "login" }).click();
-      await page.getByLabel("username").fill("mluukkai");
-      await page.getByLabel("password").fill("wrong");
-      await page.getByRole("button", { name: "login" }).click();
+      await login(page, "mluukkai", "salainen");
 
       await expect(page.getByText("wrong credentials")).toBeVisible();
     });
   });
+
   describe("When logged in", () => {
     beforeEach(async ({ page }) => {
-      await page.getByRole("button", { name: "login" }).click();
-      await page.getByLabel("username").fill("mluukkai");
-      await page.getByLabel("password").fill("salainen");
-      await page.getByRole("button", { name: "login" }).click();
+      await login(page, "mluukkai", "salainen");
     });
 
     test("a new blog can be created", async ({ page }) => {
-      await page.getByRole('button', { name: 'create new blog' }).click()
-      await page.getByLabel('title').fill('test')
-      await page.getByLabel('author').fill('tester')
-      await page.getByLabel('url').fill('testing.com')
-      await page.getByRole('button', { name: 'create' }).click()
-      await expect(page.getByText('test tester')).toBeVisible()
+      await createBlog(page, "test", "tester", "testing.com");
+      await expect(page.getByText("test tester")).toBeVisible();
+    });
+
+    test("a blog can be liked", async ({ page }) => {
+      await createBlog(page, "test", "tester", "testing.com");
+
+      await page.getByRole("button", { name: "view" }).click();
+      await expect(page.getByText("likes 0")).toBeVisible();
+
+      await page.getByRole("button", { name: "like" }).click();
+      await expect(page.getByText("likes 1")).toBeVisible();
     });
   });
 });

@@ -29,7 +29,7 @@ const Blog = ({ blog, user, handleLike, removeBlog, view, toggleView }) => {
             </a>
           </div>
           <div>
-            {blog.likes}
+            likes {blog.likes}
             <button
               onClick={() => {
                 handleLike(blog);
