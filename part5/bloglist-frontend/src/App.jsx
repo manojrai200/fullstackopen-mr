@@ -46,7 +46,7 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch {
-      setMessage("wrong username or password");
+      setMessage("wrong credentials");
       setStatus("error");
       setTimeout(() => {
         setMessage(null);

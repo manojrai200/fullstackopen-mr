@@ -6,7 +6,7 @@ router.post('/reset', async (request, response) => {
   await Blog.deleteMany({})
   await User.deleteMany({})
 
-  response.status(204).end()
+  response.send('both Blog and User have been removed').status(204).end()
 })
 
 module.exports = router
