@@ -109,5 +109,30 @@ describe("Blog app", () => {
         page.getByRole("button", { name: "remove" })
       ).not.toBeVisible();
     });
+
+    test("blogs are ordered by likes", async ({ page }) => {
+      await createBlog(page, "First blog", "Author1", "https://first.com");
+      await createBlog(page, "Second blog", "Author1", "https://second.com");
+      await createBlog(page, "Third blog", "Author1", "https://third.com");
+
+      const secondBlog = page
+        .locator(".blog")
+        .filter({ hasText: "Second blog" });
+      await secondBlog.getByRole("button", { name: "view" }).click();
+      await secondBlog.getByRole("button", { name: "like" }).click();
+      await expect(secondBlog.getByText("likes 1")).toBeVisible();
+      await secondBlog.getByRole("button", { name: "like" }).click();
+      await expect(secondBlog.getByText("likes 2")).toBeVisible();
+
+      const thirdBlog = page.locator(".blog").filter({ hasText: "Third blog" });
+      await thirdBlog.getByRole("button", { name: "view" }).click();
+      await thirdBlog.getByRole("button", { name: "like" }).click();
+      await expect(thirdBlog.getByText("likes 1")).toBeVisible();
+
+      const blogs = await page.locator(".blog").allTextContents();
+      expect(blogs[0]).toContain("Second blog");
+      expect(blogs[1]).toContain("Third blog");
+      expect(blogs[2]).toContain("First blog");
+    });
   });
 });
