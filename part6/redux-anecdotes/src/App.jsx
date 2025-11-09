@@ -10,6 +10,7 @@ const App = () => {
       <Notification />
       <Filter />
       <AnecdoteList />
+      <h2>create new</h2>
       <AnecdoteForm />
     </div>
   );
