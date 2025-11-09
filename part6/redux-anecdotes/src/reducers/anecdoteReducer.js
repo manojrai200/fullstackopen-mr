@@ -29,7 +29,7 @@ const anecdoteSlice = createSlice({
       const content = action.payload;
       state.push({
         content,
-        vote: 0,
+        votes: 0,
         id: getId(),
       });
     },
