@@ -10,7 +10,7 @@ const AnecdoteForm = () => {
     e.target.anecdote.value = "";
     dispatch(creatAnecdote(content));
   };
-  
+
   return (
     <div>
       <h2>create new</h2>

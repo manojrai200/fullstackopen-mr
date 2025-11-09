@@ -9,16 +9,23 @@ const AnecdoteList = () => {
   const filteredAnecdotes = anecdotes.filter((anecdote) =>
     anecdote.content.toLowerCase().includes(filter.toLowerCase())
   );
-  const sortedAnecdotes = [...filteredAnecdotes].sort((a, b) => b.votes - a.votes);
+
+  const sortedAnecdotes = [...filteredAnecdotes].sort(
+    (a, b) => b.votes - a.votes
+  );
+
+  const handleVote = (anecdote) => {
+    dispatch(addVote(anecdote.id));
+  };
+
   return (
     <div>
-      <h2>Anecdotes</h2>
       {sortedAnecdotes.map((anecdote) => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => dispatch(addVote(anecdote.id))}>vote</button>
+            <button onClick={() => handleVote(anecdote)}>vote</button>
           </div>
         </div>
       ))}
