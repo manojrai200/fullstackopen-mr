@@ -99,7 +99,7 @@ const Footer = () => (
   </div>
 );
 
-const CreateNew = (props) => {
+const CreateNew = ({ addNew }) => {
   const content = useField("text");
   const author = useField("text");
   const info = useField("text");
@@ -107,7 +107,7 @@ const CreateNew = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.addNew({
+    addNew({
       content: content.value,
       author: author.value,
       info: info.value,
@@ -189,18 +189,18 @@ const App = () => {
     }, 5000);
   };
 
-  const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
+  // const anecdoteById = (id) => anecdotes.find((a) => a.id === id);/
 
-  const vote = (id) => {
-    const anecdote = anecdoteById(id);
+  // const vote = (id) => {
+  //   const anecdote = anecdoteById(id);
 
-    const voted = {
-      ...anecdote,
-      votes: anecdote.votes + 1,
-    };
+  //   const voted = {
+  //     ...anecdote,
+  //     votes: anecdote.votes + 1,
+  //   };
 
-    setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
-  };
+  //   setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
+  // };
 
   return (
     <Router>
@@ -211,12 +211,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
           <Route path="/:id" element={<Anecdote anecdotes={anecdotes} />} />
-          <Route
-            path="/create"
-            element={
-              <CreateNew addNew={addNew} setNotification={setNotification} />
-            }
-          />
+          <Route path="/create" element={<CreateNew addNew={addNew} />} />
           <Route path="/about" element={<About />} />
         </Routes>
         <Footer />
